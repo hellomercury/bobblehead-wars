@@ -1,0 +1,175 @@
+fileFormatVersion: 2
+guid: 7df968ec880694920bcb46964b9d62a4
+timeCreated: 1466012451
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Back_Claw_IK_L
+    100004: Back_Claw_IK_R
+    100006: Back_Claw_L
+    100008: Back_Claw_L_0
+    100010: Back_Claw_R
+    100012: Back_Claw_R_0
+    100014: Back_Leg_1_R
+    100016: Back_Leg_2_R
+    100018: BezierCurve
+    100020: //RootNode
+    100022: Body
+    100024: Bone
+    100026: Front_Claw_IK_L
+    100028: Front_Claw_IK_R
+    100030: Front_Claw_L
+    100032: Front_Claw_L_0
+    100034: Front_Claw_R
+    100036: Front_Claw_R_0
+    100038: Front_Leg_1_L
+    100040: Front_Leg_1_L_001
+    100042: Front_Leg_1_R
+    100044: Front_Leg_2_L
+    100046: Front_Leg_2_L_001
+    100048: Front_Leg_2_R
+    100050: Leg
+    100052: Leg_001
+    100054: Leg_002
+    100056: Leg_003
+    100058: Leg_004
+    100060: Leg_005
+    100062: Leg_006
+    100064: Leg_007
+    100066: Master_Control
+    100068: Spring_Attachment_Point
+    100070: World_Centre
+    400000: Armature
+    400002: Back_Claw_IK_L
+    400004: Back_Claw_IK_R
+    400006: Back_Claw_L
+    400008: Back_Claw_L_0
+    400010: Back_Claw_R
+    400012: Back_Claw_R_0
+    400014: Back_Leg_1_R
+    400016: Back_Leg_2_R
+    400018: BezierCurve
+    400020: //RootNode
+    400022: Body
+    400024: Bone
+    400026: Front_Claw_IK_L
+    400028: Front_Claw_IK_R
+    400030: Front_Claw_L
+    400032: Front_Claw_L_0
+    400034: Front_Claw_R
+    400036: Front_Claw_R_0
+    400038: Front_Leg_1_L
+    400040: Front_Leg_1_L_001
+    400042: Front_Leg_1_R
+    400044: Front_Leg_2_L
+    400046: Front_Leg_2_L_001
+    400048: Front_Leg_2_R
+    400050: Leg
+    400052: Leg_001
+    400054: Leg_002
+    400056: Leg_003
+    400058: Leg_004
+    400060: Leg_005
+    400062: Leg_006
+    400064: Leg_007
+    400066: Master_Control
+    400068: Spring_Attachment_Point
+    400070: World_Centre
+    2300000: BezierCurve
+    3300000: BezierCurve
+    4300000: Leg_001
+    4300002: Leg
+    4300004: Front_Claw_L
+    4300006: Leg_002
+    4300008: Leg_003
+    4300010: Front_Claw_R
+    4300012: Leg_005
+    4300014: Leg_004
+    4300016: Back_Claw_R
+    4300018: Leg_006
+    4300020: Leg_007
+    4300022: Back_Claw_L
+    4300024: Body
+    4300026: BezierCurve
+    7400000: Default Take
+    7400002: WalkCycle
+    9500000: //RootNode
+    13700000: Back_Claw_L
+    13700002: Back_Claw_R
+    13700004: Body
+    13700006: Front_Claw_L
+    13700008: Front_Claw_R
+    13700010: Leg
+    13700012: Leg_001
+    13700014: Leg_002
+    13700016: Leg_003
+    13700018: Leg_004
+    13700020: Leg_005
+    13700022: Leg_006
+    13700024: Leg_007
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,327 @@
+fileFormatVersion: 2
+guid: 2cbfd6a0a2f484201b1bfa4f22e52171
+timeCreated: 1512872872
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Abdomen
+    100002: Armature
+    100004: Backpack
+    100006: //RootNode
+    100008: Calf
+    100010: Calf.001
+    100012: Calf.L
+    100014: Calf.L_end
+    100016: Calf.R
+    100018: Calf.R_end
+    100020: Chest
+    100022: Cube.001
+    100024: Cube.002
+    100026: Cube.003
+    100028: Cube.004
+    100030: cutter 1
+    100032: Cylinder.001
+    100034: Elbow.L
+    100036: Elbow.L_end
+    100038: Elbow.R
+    100040: Elbow.R_end
+    100042: Foot
+    100044: Foot IK.L
+    100046: Foot IK.R
+    100048: Foot.001
+    100050: Foot.L
+    100052: Foot.L_end
+    100054: Foot.R
+    100056: Foot.R_end
+    100058: Forearm
+    100060: Forearm.001
+    100062: Forearm.L
+    100064: Forearm.R
+    100066: Gun
+    100068: Gun end
+    100070: Gun.001
+    100072: Hand IK.L
+    100074: Hand IK.L_end
+    100076: Hand IK.R
+    100078: Hand IK.R_end
+    100080: Hand.L
+    100082: Hand.L 1
+    100084: Hand.L_end
+    100086: Hand.R
+    100088: Hand.R 1
+    100090: Hand.R_end
+    100092: Hips
+    100094: Hips 1
+    100096: Knee.L
+    100098: Knee.L_end
+    100100: Knee.R
+    100102: Knee.R_end
+    100104: Kneepad
+    100106: Kneepad.001
+    100108: Master Control
+    100110: Neck Post
+    100112: Shoulder
+    100114: Shoulder.001
+    100116: Shoulder.L
+    100118: Shoulder.R
+    100120: Spring Attachment Point
+    100122: Thigh.001
+    100124: Thigh.L
+    100126: Thigh.L 1
+    100128: Thigh.R
+    100130: Torso
+    100132: Upper Arm
+    100134: Upper Arm.001
+    100136: World Centre
+    400000: Abdomen
+    400002: Armature
+    400004: Backpack
+    400006: //RootNode
+    400008: Calf
+    400010: Calf.001
+    400012: Calf.L
+    400014: Calf.L_end
+    400016: Calf.R
+    400018: Calf.R_end
+    400020: Chest
+    400022: Cube.001
+    400024: Cube.002
+    400026: Cube.003
+    400028: Cube.004
+    400030: cutter 1
+    400032: Cylinder.001
+    400034: Elbow.L
+    400036: Elbow.L_end
+    400038: Elbow.R
+    400040: Elbow.R_end
+    400042: Foot
+    400044: Foot IK.L
+    400046: Foot IK.R
+    400048: Foot.001
+    400050: Foot.L
+    400052: Foot.L_end
+    400054: Foot.R
+    400056: Foot.R_end
+    400058: Forearm
+    400060: Forearm.001
+    400062: Forearm.L
+    400064: Forearm.R
+    400066: Gun
+    400068: Gun end
+    400070: Gun.001
+    400072: Hand IK.L
+    400074: Hand IK.L_end
+    400076: Hand IK.R
+    400078: Hand IK.R_end
+    400080: Hand.L
+    400082: Hand.L 1
+    400084: Hand.L_end
+    400086: Hand.R
+    400088: Hand.R 1
+    400090: Hand.R_end
+    400092: Hips
+    400094: Hips 1
+    400096: Knee.L
+    400098: Knee.L_end
+    400100: Knee.R
+    400102: Knee.R_end
+    400104: Kneepad
+    400106: Kneepad.001
+    400108: Master Control
+    400110: Neck Post
+    400112: Shoulder
+    400114: Shoulder.001
+    400116: Shoulder.L
+    400118: Shoulder.R
+    400120: Spring Attachment Point
+    400122: Thigh.001
+    400124: Thigh.L
+    400126: Thigh.L 1
+    400128: Thigh.R
+    400130: Torso
+    400132: Upper Arm
+    400134: Upper Arm.001
+    400136: World Centre
+    2300000: Abdomen
+    2300002: Backpack
+    2300004: Calf
+    2300006: Calf.001
+    2300008: Chest
+    2300010: Cube.001
+    2300012: Cube.002
+    2300014: Cube.003
+    2300016: Cube.004
+    2300018: cutter 1
+    2300020: Cylinder.001
+    2300022: Foot
+    2300024: Foot.001
+    2300026: Forearm
+    2300028: Forearm.001
+    2300030: Gun
+    2300032: Gun end
+    2300034: Hand.L 1
+    2300036: Hand.R 1
+    2300038: Hips 1
+    2300040: Kneepad
+    2300042: Kneepad.001
+    2300044: Neck Post
+    2300046: Shoulder
+    2300048: Shoulder.001
+    2300050: Thigh.001
+    2300052: Thigh.L 1
+    2300054: Upper Arm
+    2300056: Upper Arm.001
+    3300000: Abdomen
+    3300002: Backpack
+    3300004: Calf
+    3300006: Calf.001
+    3300008: Chest
+    3300010: Cube.001
+    3300012: Cube.002
+    3300014: Cube.003
+    3300016: Cube.004
+    3300018: cutter 1
+    3300020: Cylinder.001
+    3300022: Foot
+    3300024: Foot.001
+    3300026: Forearm
+    3300028: Forearm.001
+    3300030: Gun
+    3300032: Gun end
+    3300034: Hand.L 1
+    3300036: Hand.R 1
+    3300038: Hips 1
+    3300040: Kneepad
+    3300042: Kneepad.001
+    3300044: Neck Post
+    3300046: Shoulder
+    3300048: Shoulder.001
+    3300050: Thigh.001
+    3300052: Thigh.L 1
+    3300054: Upper Arm
+    3300056: Upper Arm.001
+    4300000: Hips
+    4300002: Abdomen
+    4300004: Neck Post
+    4300006: Chest
+    4300008: Backpack
+    4300010: Upper Arm
+    4300012: Shoulder
+    4300014: Forearm
+    4300016: Hand.L
+    4300018: Gun
+    4300020: Cube.004
+    4300022: Cube.003
+    4300024: Cube.002
+    4300026: Cube.001
+    4300028: cutter 1
+    4300030: Gun end
+    4300032: Cylinder.001
+    4300034: Thigh.L
+    4300036: Calf
+    4300038: Kneepad
+    4300040: Foot
+    7400000: Armature|Idle
+    7400002: Armature|Sidestep-Left
+    7400004: Armature|Sidestep-Right
+    7400006: Armature|Walk
+    7400008: Armature|Walk-Reverse
+    7400010: Forearm|Idle
+    7400012: Hand.L|Idle
+    7400014: Forearm.001|Idle
+    7400016: Hand.R|Idle
+    7400018: Gun.001|Idle
+    7400020: Neck Post|Idle
+    7400022: Kneepad.001|Idle
+    7400024: Calf|Idle
+    7400026: Kneepad|Idle
+    9500000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Main Texture
+    second: {fileID: 2100000, guid: 8ca38a7ddae1b407b933f9b48004e877, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {fileID: 2100000, guid: 374fe08c402294bf8a2008726f8b0eca, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
