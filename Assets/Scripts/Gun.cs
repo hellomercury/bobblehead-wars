@@ -56,6 +56,7 @@ public class Gun : MonoBehaviour
                 InvokeRepeating("FireBullet", 0f, LaunchRate);
             }
         }
+
         if (Input.GetMouseButtonUp(0))
         {
             CancelInvoke("FireBullet");
@@ -82,6 +83,7 @@ public class Gun : MonoBehaviour
                 return bullet;
             }
         }
+
         var newBullet = Instantiate(BulletPrefab);
         _availablePools.Add(newBullet);
         return newBullet;
