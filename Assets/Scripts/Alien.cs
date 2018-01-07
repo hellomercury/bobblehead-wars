@@ -1,5 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
+
+[System.Serializable]
+public class OnAlienDestroyedEvent : UnityEvent<int>
+{
+}
 
 public class Alien : MonoBehaviour
 {
@@ -19,6 +25,11 @@ public class Alien : MonoBehaviour
     public float NavigationUpdate = 0.5f;
 
     /// <summary>
+    /// Event to send when the alien is destroyed.
+    /// </summary>
+    public OnAlienDestroyedEvent OnDestroyEvent;
+
+    /// <summary>
     /// Tracks how much time has passed since the previous update.
     /// </summary>
     private float _navigationTime;
@@ -27,6 +38,11 @@ public class Alien : MonoBehaviour
     /// Component attached to this game object.
     /// </summary>
     private NavMeshAgent _agent;
+
+    private void Awake()
+    {
+        OnDestroyEvent = new OnAlienDestroyedEvent();
+    }
 
     private void Start()
     {
@@ -49,7 +65,7 @@ public class Alien : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.Instance.DisableAlien(Index);
+        OnDestroyEvent.Invoke(Index);
         SoundManager.Instance.PlayOneShot(SoundManager.Instance.AlienDeath);
     }
 }

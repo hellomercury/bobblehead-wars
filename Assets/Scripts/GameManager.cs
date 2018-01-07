@@ -181,6 +181,11 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (Player == null)
+        {
+            return;
+        }
+
         // Spawn once reached time limit.
         _currentAlienSpawnTime += Time.deltaTime;
         if (_currentAlienSpawnTime > _generatedAlienSpawnTime)
@@ -261,12 +266,13 @@ public class GameManager : MonoBehaviour
     /// Disable the alien object in the pool with given index.
     /// </summary>
     /// <param name="index">The index of the alien object to be disabled</param>
-    public void DisableAlien(int index)
+    private void DisableAlien(int index)
     {
         lock (_alienGlobalLock)
         {
             _availableAlienPool[index].SetActive(false);
             _aliensOnScreen -= 1;
+            TotalAliens -= 1;
         }
     }
 
@@ -318,6 +324,7 @@ public class GameManager : MonoBehaviour
         var alienScript = alien.GetComponent<Alien>();
         alienScript.Index = i;
         alienScript.Target = Player.transform;
+        alienScript.OnDestroyEvent.AddListener(DisableAlien);
         alien.transform.parent = AlienContainer.transform;
         return alien;
     }
