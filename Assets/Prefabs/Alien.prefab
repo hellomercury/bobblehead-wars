@@ -439,6 +439,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4932787786031148}
+  - component: {fileID: 95378993548429156}
   m_Layer: 0
   m_Name: BobbleEnemy-Head
   m_TagString: Untagged
@@ -1188,6 +1189,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &95378993548429156
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1699910410913478}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d475d561d9bba4167ba4f2632a5bc052, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!95 &95814316511033284
 Animator:
   serializedVersion: 3
@@ -1197,7 +1215,7 @@ Animator:
   m_GameObject: {fileID: 1173661764847114}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 7df968ec880694920bcb46964b9d62a4, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bd1d8c081533a4be69d2f6829d8585b2, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1216,7 +1234,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e66a7d8dca8543d18a77f30ee06d4c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Index: 0
   Target: {fileID: 0}
+  GameManagerScript: {fileID: 0}
+  NavigationUpdate: 0.5
 --- !u!135 &135291223857680974
 SphereCollider:
   m_ObjectHideFlags: 1

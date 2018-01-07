@@ -14,11 +14,6 @@ public class Alien : MonoBehaviour
     [HideInInspector] public Transform Target;
 
     /// <summary>
-    /// GameManager script attached to the GameManager object.
-    /// </summary>
-    [HideInInspector] public GameManager GameManagerScript;
-
-    /// <summary>
     /// The amount of time, in milliseconds, for when the alien should update its path.
     /// </summary>
     public float NavigationUpdate = 0.5f;
@@ -26,7 +21,7 @@ public class Alien : MonoBehaviour
     /// <summary>
     /// Tracks how much time has passed since the previous update.
     /// </summary>
-    private float _navigationTime = 0;
+    private float _navigationTime;
 
     /// <summary>
     /// Component attached to this game object.
@@ -54,6 +49,7 @@ public class Alien : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GameManagerScript.DisableAlien(Index);
+        GameManager.Instance.DisableAlien(Index);
+        SoundManager.Instance.PlayOneShot(SoundManager.Instance.AlienDeath);
     }
 }

@@ -4,9 +4,16 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     /// <summary>
+    /// Single instance of the game manager to be referenced elsewhere.
+    /// </summary>
+    public static GameManager Instance { get; private set; }
+
+    /// <summary>
     /// The marine.
     /// </summary>
     public GameObject Player;
+
+    #region AlienRegion
 
     /// <summary>
     /// Spawn points in the map.
@@ -16,7 +23,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Alien prefab.
     /// </summary>
-    public GameObject Alien;
+    public GameObject AlienPrefab;
 
     /// <summary>
     /// Determine how many aliens appear on the screen at once
@@ -49,14 +56,19 @@ public class GameManager : MonoBehaviour
     public int AlienPoolSize = 10;
 
     /// <summary>
+    /// Container to be used to contain all of the pooled aliens.
+    /// </summary>
+    public GameObject AlienContainer;
+
+    /// <summary>
     /// Whether to spawn aliens.
     /// </summary>
-    public bool Spawning = true;
+    public bool AlienSpawning = true;
 
     /// <summary>
     /// Global lock used to sync between threads.
     /// </summary>
-    private Object _globalLock;
+    private Object _alienGlobalLock;
 
     /// <summary>
     /// The total number of aliens currently displayed.
@@ -66,46 +78,119 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Track the time between spawn events.
     /// </summary>
-    private float _generatedSpawnTime;
+    private float _generatedAlienSpawnTime;
 
     /// <summary>
     /// Track the milliseconds since the last spawn.
     /// </summary>
-    private float _currentSpawnTime;
+    private float _currentAlienSpawnTime;
 
     /// <summary>
     /// Alien pool to be reused.
     /// </summary>
-    private List<GameObject> _alienPool;
+    private List<GameObject> _availableAlienPool;
+
+    #endregion
+
+    #region PickupRegion
+
+    /// <summary>
+    /// Pickup prefab used for cloning.
+    /// </summary>
+    public GameObject PickupPrefab;
+
+    /// <summary>
+    /// Container to be used to contain all of the pooled pickups.
+    /// </summary>
+    public GameObject PickupContainer;
+
+    /// <summary>
+    /// How many pickups to be put into the pool.
+    /// </summary>
+    public int PickupPoolSize = 3;
+
+    /// <summary>
+    /// Whether to spawn pickups.
+    /// </summary>
+    public bool PickupSpawning = true;
+
+    /// <summary>
+    /// The gun to be upgraded.
+    /// </summary>
+    public Gun Gun;
+
+    /// <summary>
+    /// Maximum time that will pass before the upgrade spawns.
+    /// </summary>
+    public float UpgradeMaxTimeSpawn = 10f;
+
+    /// <summary>
+    /// Whether the upgrade has spawned or not since it can only spawn once.
+    /// </summary>
+    private bool _spawnedUpgrade;
+
+    /// <summary>
+    /// Time limit of the pickup.
+    /// </summary>
+    private float _actualUpgradeTime;
+
+    /// <summary>
+    /// Time that has passed since the last pickup was picked up.
+    /// </summary>
+    private float _currentUpgradeTime;
+
+    /// <summary>
+    /// Pool of pickup objects to be reused.
+    /// </summary>
+    private List<GameObject> _availablePickupPool;
+
+    /// <summary>
+    /// Global lock to be used to sync pickup-related operations.
+    /// </summary>
+    private Object _pickupGlobalLock;
+
+    #endregion
 
     private void Awake()
     {
-        _globalLock = new Object();
+        Instance = this;
+        _alienGlobalLock = new Object();
+        _pickupGlobalLock = new Object();
     }
 
     private void Start()
     {
-        _alienPool = new List<GameObject>();
+        _availableAlienPool = new List<GameObject>();
         for (int i = 0; i < AlienPoolSize; i++)
         {
             var newAlien = CreateAlien(i);
             newAlien.SetActive(false);
-            _alienPool.Add(newAlien);
+            _availableAlienPool.Add(newAlien);
         }
+
+        _availablePickupPool = new List<GameObject>();
+        for (int i = 0; i < PickupPoolSize; i++)
+        {
+            var pickup = CreatePickup(i);
+            pickup.SetActive(false);
+            _availablePickupPool.Add(pickup);
+        }
+
+        _actualUpgradeTime = Mathf.Abs(Random.Range(UpgradeMaxTimeSpawn - 3.0f, UpgradeMaxTimeSpawn));
     }
 
     private void Update()
     {
         // Spawn once reached time limit.
-        _currentSpawnTime += Time.deltaTime;
-        if (_currentSpawnTime > _generatedSpawnTime)
+        _currentAlienSpawnTime += Time.deltaTime;
+        if (_currentAlienSpawnTime > _generatedAlienSpawnTime)
         {
             // Reset timer and regenerate time to spawn next wave.
-            _currentSpawnTime = 0;
-            _generatedSpawnTime = Random.Range(MinSpawnTime, MaxSpawnTime);
+            _currentAlienSpawnTime = 0;
+            _generatedAlienSpawnTime = Random.Range(MinSpawnTime, MaxSpawnTime);
 
             // Only spawn if there are still aliens to be spawned before reaching total aliens.
-            if (Spawning && AliensPerSpawn > 0 && _aliensOnScreen < TotalAliens)
+            if (AlienSpawning && AliensPerSpawn > 0 && _aliensOnScreen < TotalAliens)
             {
                 // Keep track of already used spawn locations.
                 var previousSpawnLocations = new HashSet<int>();
@@ -152,6 +237,24 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+        // Spawn pickup when time exceed.
+        _currentUpgradeTime += Time.deltaTime;
+        if (_currentUpgradeTime > _actualUpgradeTime)
+        {
+            _currentUpgradeTime = 0;
+            if (PickupSpawning && !_spawnedUpgrade)
+            {
+                // Select a spawning location
+                var randomNumber = Random.Range(0, SpawnPoints.Length - 1);
+                var spawnLocation = SpawnPoints[randomNumber];
+                // Get a pickup from the pickup pool.
+                var upgrade = GetPickupFromPool();
+                upgrade.transform.position = spawnLocation.transform.position;
+                _spawnedUpgrade = true;
+                SoundManager.Instance.PlayOneShot(SoundManager.Instance.PowerUpAppear);
+            }
+        }
     }
 
     /// <summary>
@@ -160,10 +263,23 @@ public class GameManager : MonoBehaviour
     /// <param name="index">The index of the alien object to be disabled</param>
     public void DisableAlien(int index)
     {
-        lock (_globalLock)
+        lock (_alienGlobalLock)
         {
-            _alienPool[index].SetActive(false);
+            _availableAlienPool[index].SetActive(false);
             _aliensOnScreen -= 1;
+        }
+    }
+
+    /// <summary>
+    /// Disable the pickup object in the pool with given index.
+    /// </summary>
+    /// <param name="index">The index of the alien object to be disabled</param>
+    public void DisablePickup(int index)
+    {
+        lock (_pickupGlobalLock)
+        {
+            _availablePickupPool[index].SetActive(false);
+            _spawnedUpgrade = false;
         }
     }
 
@@ -173,25 +289,22 @@ public class GameManager : MonoBehaviour
     /// <returns>an alien game object from the pool</returns>
     private GameObject GetAlienFromPool()
     {
-        GameObject alien = null;
+        // Return any "free" alien in the alien pool.
         for (int i = 0; i < AlienPoolSize; i++)
         {
-            if (!_alienPool[i].activeInHierarchy)
+            if (!_availableAlienPool[i].activeInHierarchy)
             {
-                alien = _alienPool[i];
+                var alien = _availableAlienPool[i];
                 alien.SetActive(true);
-                break;
+                return alien;
             }
         }
 
-        if (alien == null)
-        {
-            alien = CreateAlien(AlienPoolSize);
-            _alienPool.Add(alien);
-            AlienPoolSize += 1;
-        }
-
-        return alien;
+        // Createa a new alien and return it after adding it to the alien pool.
+        var newAlien = CreateAlien(AlienPoolSize);
+        _availableAlienPool.Add(newAlien);
+        AlienPoolSize += 1;
+        return newAlien;
     }
 
     /// <summary>
@@ -201,12 +314,50 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     private GameObject CreateAlien(int i)
     {
-        var alien = Instantiate(Alien);
+        var alien = Instantiate(AlienPrefab);
         var alienScript = alien.GetComponent<Alien>();
-        alienScript.GameManagerScript = this;
         alienScript.Index = i;
         alienScript.Target = Player.transform;
-        alien.transform.parent = gameObject.transform;
+        alien.transform.parent = AlienContainer.transform;
         return alien;
+    }
+
+    /// <summary>
+    /// Return an pickup game object from the pool.
+    /// </summary>
+    /// <returns>an pickup game object from the pool</returns>
+    private GameObject GetPickupFromPool()
+    {
+        // Return any "free" pickup in the alien pool.
+        for (int i = 0; i < PickupPoolSize; i++)
+        {
+            if (!_availablePickupPool[i].activeInHierarchy)
+            {
+                var pickup = _availablePickupPool[i];
+                pickup.SetActive(true);
+                return pickup;
+            }
+        }
+
+        // Createa a new pickup and return it after adding it to the pickup pool.
+        var newPickup = CreatePickup(PickupPoolSize);
+        _availablePickupPool.Add(newPickup);
+        PickupPoolSize += 1;
+        return newPickup;
+    }
+
+    /// <summary>
+    /// Create an pickup object and populate fields of the object.
+    /// </summary>
+    /// <param name="i">Index of the new pickup object in the pool</param>
+    /// <returns></returns>
+    private GameObject CreatePickup(int i)
+    {
+        var pickup = Instantiate(PickupPrefab);
+        var upgradeScript = pickup.GetComponent<Upgrade>();
+        upgradeScript.Index = i;
+        pickup.transform.parent = PickupContainer.transform;
+        upgradeScript.Gun = Gun;
+        return pickup;
     }
 }

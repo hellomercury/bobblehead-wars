@@ -29,26 +29,54 @@ public class Gun : MonoBehaviour
     public int ProjectilePoolCount = 10;
 
     /// <summary>
+    /// Whether the gun has been upgraded.
+    /// </summary>
+    public bool IsUpgraded;
+
+    /// <summary>
+    /// A game object to contain all of the pooled projectiles.
+    /// </summary>
+    public GameObject ProjectileContainer;
+
+    /// <summary>
+    /// How long the upgrade will last.
+    /// </summary>
+    public float UpgradeTime = 5.0f;
+
+    /// <summary>
     /// Pool of projectiles that can be reused.
     /// </summary>
-    private List<GameObject> _availablePools;
+    private List<GameObject> _projectilePool;
+
+    /// <summary>
+    /// Audio source used when firing a projectile.
+    /// </summary>
+    private AudioSource _audioSource;
+
+    /// <summary>
+    /// Keep track of how long has it been since a power-up was picked up.
+    /// </summary>
+    private float _currentUpgradeTime;
 
     private void Start()
     {
         // Populate the projectile pool.
-        _availablePools = new List<GameObject>();
+        _projectilePool = new List<GameObject>();
         for (int i = 0; i < ProjectilePoolCount; i++)
         {
             var newBullet = Instantiate(BulletPrefab);
+            newBullet.transform.parent = ProjectileContainer.transform;
             newBullet.SetActive(false);
-            _availablePools.Add(newBullet);
+            _projectilePool.Add(newBullet);
         }
+
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        // If the user is pressing the left mouse button, repeatedly invoke the bullet firing method.
+        // If the user is pressing the left mouse button, repeatedly invoke the projectile firing method.
         if (Input.GetMouseButtonDown(0))
         {
             if (!IsInvoking("FireBullet"))
@@ -57,35 +85,86 @@ public class Gun : MonoBehaviour
             }
         }
 
+        // Once the left mouse button is lifted up, stop firing projectiles.
         if (Input.GetMouseButtonUp(0))
         {
             CancelInvoke("FireBullet");
         }
+
+        // Remove upgrade once passed time limit.
+        _currentUpgradeTime += Time.deltaTime;
+        if (_currentUpgradeTime > UpgradeTime && IsUpgraded)
+        {
+            IsUpgraded = false;
+        }
     }
 
+    /// <summary>
+    /// Fire a single projectile and play sound.
+    /// </summary>
     private void FireBullet()
     {
         // Create new bullets if the pool is empty. If not, dequeue and reactivate it.
-        var bullet = GetProjectile();
-        bullet.transform.position = LaunchPosition.position;
-        bullet.GetComponent<Rigidbody>().velocity = transform.parent.forward * LaunchSpeed;
+        var bullet = GetFreeProjectileWithRigidbody();
+        bullet.velocity = transform.parent.forward * LaunchSpeed;
+
+        // If upgraded, fire another two projectiles.
+        if (IsUpgraded)
+        {
+            var bullet2 = GetFreeProjectileWithRigidbody();
+            bullet2.velocity = (transform.right + transform.forward / 0.5f) * 100;
+            var bullet3 = GetFreeProjectileWithRigidbody();
+            bullet3.velocity = (transform.right * -1 + transform.forward / 0.5f) * 100;
+
+            _audioSource.PlayOneShot(SoundManager.Instance.UpgradedGunFire);
+        }
+        else
+        {
+            _audioSource.PlayOneShot(SoundManager.Instance.GunFire);
+        }
     }
 
-    private GameObject GetProjectile()
+    /// <summary>
+    /// Return a projectile's Rigidbody from the project pool, but with its position set. 
+    /// </summary>
+    /// <returns></returns>
+    private Rigidbody GetFreeProjectileWithRigidbody()
+    {
+        var bullet = GetProjectileFromPool();
+        bullet.transform.position = LaunchPosition.position;
+        return bullet.GetComponent<Rigidbody>();
+    }
+
+    /// <summary>
+    /// Retrieve a projectile from the projectile pool. This method only returns a raw projectile.
+    /// </summary>
+    /// <returns>A projectile from the projectile pool</returns>
+    private GameObject GetProjectileFromPool()
     {
         // If there is an available bullet in the pool, reuse it. Otherwise, create a new one.
         for (int i = 0; i < ProjectilePoolCount; i++)
         {
-            if (!_availablePools[i].activeInHierarchy)
+            if (!_projectilePool[i].activeInHierarchy)
             {
-                var bullet = _availablePools[i];
+                var bullet = _projectilePool[i];
                 bullet.SetActive(true);
                 return bullet;
             }
         }
 
         var newBullet = Instantiate(BulletPrefab);
-        _availablePools.Add(newBullet);
+        newBullet.transform.parent = ProjectileContainer.transform;
+        _projectilePool.Add(newBullet);
+        ProjectilePoolCount += 1;
         return newBullet;
+    }
+
+    /// <summary>
+    /// Upgrade the gun.
+    /// </summary>
+    public void UpgradeGun()
+    {
+        IsUpgraded = true;
+        _currentUpgradeTime = 0;
     }
 }

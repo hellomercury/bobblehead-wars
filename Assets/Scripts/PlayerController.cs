@@ -28,6 +28,11 @@ public class PlayerController : MonoBehaviour
     public float TurnSpeed = 10.0f;
 
     /// <summary>
+    /// Animator for the body of the marine.
+    /// </summary>
+    public Animator BodyAnimator;
+
+    /// <summary>
     /// Intersection when raycasting to be used to turn the marine.
     /// </summary>
     private Vector3 _currentLookTarget = Vector3.zero;
@@ -53,6 +58,10 @@ public class PlayerController : MonoBehaviour
     {
         // Apply force to the head to bounce it around.
         MarineHead.AddForce(transform.right * 150, ForceMode.Acceleration);
+
+        // Animate if walking.
+        var moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        BodyAnimator.SetBool("IsMoving", moveDirection != Vector3.zero);
 
         // Create a ray from the main camera to the mouse position.
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
