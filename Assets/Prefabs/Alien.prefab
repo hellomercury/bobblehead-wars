@@ -1236,8 +1236,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Index: 0
   Target: {fileID: 0}
-  GameManagerScript: {fileID: 0}
   NavigationUpdate: 0.5
+  OnDestroyEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: OnAlienDestroyedEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!135 &135291223857680974
 SphereCollider:
   m_ObjectHideFlags: 1

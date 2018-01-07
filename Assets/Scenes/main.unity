@@ -1051,7 +1051,7 @@ MonoBehaviour:
   AliensPerSpawn: 1
   AlienPoolSize: 10
   AlienContainer: {fileID: 1579068930}
-  AlienSpawning: 0
+  AlienSpawning: 1
   PickupPrefab: {fileID: 105092, guid: 941d6224549424c91b1cf112b44ec0cb, type: 2}
   PickupContainer: {fileID: 57861801}
   PickupPoolSize: 3
@@ -1510,6 +1510,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!136 &1268638996
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1268638991}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 2.08
+  m_Height: 0.24
+  m_Direction: 1
+  m_Center: {x: -1.61, y: 3.58, z: 0}
 --- !u!4 &1276866926 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400066, guid: 2cbfd6a0a2f484201b1bfa4f22e52171, type: 3}
@@ -1645,6 +1658,7 @@ GameObject:
   - component: {fileID: 1532950689}
   - component: {fileID: 1532950688}
   - component: {fileID: 1532950687}
+  - component: {fileID: 1532950691}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1715,6 +1729,19 @@ Transform:
   m_Father: {fileID: 1104546181}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+--- !u!114 &1532950691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1532950686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9efe26825c6d3b24aac340ea97076054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShakeDecay: 0.02
+  Intensity: 0.3
 --- !u!1001 &1564814358
 Prefab:
   m_ObjectHideFlags: 0
@@ -2340,7 +2367,13 @@ MonoBehaviour:
     m_Bits: 8192
   DisplayRay: 0
   TurnSpeed: 10
+  HitForce:
+  - 0.1
+  - 0.2
+  - 0.3
+  HitInterval: 2.5
   BodyAnimator: {fileID: 1268638994}
+  MarineBody: {fileID: 1268638992}
 --- !u!114 &2023156856
 MonoBehaviour:
   m_ObjectHideFlags: 0
