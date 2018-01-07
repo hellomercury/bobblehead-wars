@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 474840}
   - component: {fileID: 11458982}
   - component: {fileID: 13615294}
+  - component: {fileID: 114878499708842616}
   m_Layer: 15
   m_Name: Pickup
   m_TagString: Untagged
@@ -1540,7 +1541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1dd500e2e0a248918d31bc97279dd5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 90
+  RotationSpeed: 0
 --- !u!136 &13615294
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -1565,3 +1566,16 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 105092}
   m_IsPrefabParent: 1
+--- !u!114 &114878499708842616
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 105092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d7dbda5704454ef6abb303e520e4928, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gun: {fileID: 0}
+  Index: 0
