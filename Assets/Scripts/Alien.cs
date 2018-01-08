@@ -12,7 +12,7 @@ public class Alien : MonoBehaviour
     /// <summary>
     /// Index of this alien in the pool.
     /// </summary>
-    [HideInInspector] public int Index;
+    public int Index { private get; set; }
 
     /// <summary>
     /// Target to be followed by this game object.
@@ -27,7 +27,7 @@ public class Alien : MonoBehaviour
     /// <summary>
     /// Event to send when the alien is destroyed.
     /// </summary>
-    public OnAlienDestroyedEvent OnDestroyEvent;
+    [HideInInspector] public OnAlienDestroyedEvent OnDestroyEvent;
 
     /// <summary>
     /// Tracks how much time has passed since the previous update.
@@ -43,6 +43,11 @@ public class Alien : MonoBehaviour
     /// The alien head.
     /// </summary>
     public Rigidbody Head;
+
+    /// <summary>
+    /// The alien body.
+    /// </summary>
+    public GameObject Body;
 
     /// <summary>
     /// Whether the alien is alive.
@@ -61,7 +66,7 @@ public class Alien : MonoBehaviour
 
     private void Update()
     {
-        if (IsAlive)
+        if (IsAlive && _agent.enabled)
         {
             _navigationTime += Time.deltaTime;
             if (_navigationTime > NavigationUpdate)

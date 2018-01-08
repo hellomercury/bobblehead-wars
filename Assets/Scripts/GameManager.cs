@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour
 {
@@ -181,8 +182,10 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < AlienPoolSize; i++)
         {
             var newAlien = CreateAlien(i);
-            newAlien.SetActive(false);
             Utility.FindChildWithTag(newAlien, "AlienHead").SetActive(false);
+            Utility.FindChildWithTag(newAlien, "AlienBody").SetActive(false);
+            newAlien.GetComponent<SphereCollider>().enabled = false;
+            newAlien.GetComponent<NavMeshAgent>().enabled = false;
             _availableAlienPool.Add(newAlien);
         }
 
@@ -289,11 +292,13 @@ public class GameManager : MonoBehaviour
     {
         lock (_alienGlobalLock)
         {
-            _availableAlienPool[index].SetActive(false);
             _aliensOnScreen -= 1;
             TotalAliens -= 1;
 
             var alienScript = alienGameObject.GetComponent<Alien>();
+            alienScript.Body.SetActive(false);
+            alienGameObject.GetComponent<SphereCollider>().enabled = false;
+            alienGameObject.GetComponent<NavMeshAgent>().enabled = false;
             ToogleAlienHeadDetachment(alienScript, false);
         }
     }
@@ -312,7 +317,8 @@ public class GameManager : MonoBehaviour
             {
                 var currentAlien = _availableAlienPool[i];
                 var currentAlienHead = Utility.FindChildWithTag(currentAlien, "AlienHead");
-                if (!currentAlien.activeInHierarchy && !currentAlienHead.activeSelf)
+                var currentAlienBody = Utility.FindChildWithTag(currentAlien, "AlienBody");
+                if (!currentAlienBody.activeSelf && !currentAlienHead.activeSelf)
                 {
                     alien = currentAlien;
                     alien.SetActive(true);
@@ -321,6 +327,9 @@ public class GameManager : MonoBehaviour
                     currentAlienHead.SetActive(true);
                     currentAlienHead.transform.localPosition = Utility.ClonePosition(_defaultAlienHeadPosition);
                     currentAlienHead.transform.localRotation = Utility.CloneRotation(_defaultAlienHeadRotation);
+                    currentAlienBody.SetActive(true);
+                    alien.GetComponent<SphereCollider>().enabled = true;
+                    alien.GetComponent<NavMeshAgent>().enabled = true;
                     break;
                 }
             }
@@ -422,8 +431,8 @@ public class GameManager : MonoBehaviour
         alienScript.Head.GetComponent<SphereCollider>().enabled = !isAlive;
         if (!isAlive)
         {
-            alienScript.Head.velocity = new Vector3(0, 26.0f, 3.0f);
             alienScript.Head.gameObject.SetActive(true);
+            alienScript.Head.velocity = new Vector3(0, 26.0f, 3.0f);
         }
     }
 }
