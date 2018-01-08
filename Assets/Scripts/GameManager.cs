@@ -151,11 +151,36 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// Container to store all of the alien heads.
+    /// </summary>
+    public GameObject AlienHeadContainer;
+
+    /// <summary>
+    /// Alien head.
+    /// </summary>
+    public GameObject AlienHeadPrefab;
+
+    /// <summary>
+    /// Actual pool of alien heads.
+    /// </summary>
+    private Stack<GameObject> _availableAlienHeadPool;
+
+    /// <summary>
+    /// Lock used to sync alien heads.
+    /// </summary>
+    private Object _alienHeadGlobalLock;
+
+    private Transform _defaultAlienHeadTransform;
+
     private void Awake()
     {
         Instance = this;
         _alienGlobalLock = new Object();
         _pickupGlobalLock = new Object();
+        _alienHeadGlobalLock = new Object();
+        _defaultAlienHeadTransform = AlienHeadPrefab.transform;
+        _availableAlienHeadPool = new Stack<GameObject>();
     }
 
     private void Start()
@@ -266,14 +291,73 @@ public class GameManager : MonoBehaviour
     /// Disable the alien object in the pool with given index.
     /// </summary>
     /// <param name="index">The index of the alien object to be disabled</param>
-    private void DisableAlien(int index)
+    /// <param name="alienGameObject">The alien game object that is to be disabled</param>
+    private void DisableAlien(int index, GameObject alienGameObject)
     {
         lock (_alienGlobalLock)
         {
             _availableAlienPool[index].SetActive(false);
             _aliensOnScreen -= 1;
             TotalAliens -= 1;
+
+            var alienScript = alienGameObject.GetComponent<Alien>();
+            ToogleAlienHeadDetachment(alienScript, false);
         }
+    }
+
+    /// <summary>
+    /// Return an alien game object from the pool.
+    /// </summary>
+    /// <returns>an alien game object from the pool</returns>
+    private GameObject GetAlienFromPool()
+    {
+        GameObject alien = null;
+        lock (_alienGlobalLock)
+        {
+            // Return any "free" alien in the alien pool.
+            for (int i = 0; i < AlienPoolSize; i++)
+            {
+                if (!_availableAlienPool[i].activeInHierarchy)
+                {
+                    alien = _availableAlienPool[i];
+                    alien.SetActive(true);
+                    var alienHead = GetAlienHeadFromPool(alien);
+                    alienHead.transform.parent = alien.transform;
+                    alienHead.transform.position = _defaultAlienHeadTransform.position;
+                    alienHead.transform.rotation = _defaultAlienHeadTransform.rotation;
+                    break;
+                }
+            }
+
+            // Createa a new alien and return it after adding it to the alien pool.
+            if (alien == null)
+            {
+                alien = CreateAlien(AlienPoolSize);
+                _availableAlienPool.Add(alien);
+                AlienPoolSize += 1;
+            }
+        }
+
+        return alien;
+    }
+
+    /// <summary>
+    /// Create an alien object and populate fields of the object.
+    /// </summary>
+    /// <param name="i">Index of the new alien object in the pool</param>
+    /// <returns></returns>
+    private GameObject CreateAlien(int i)
+    {
+        var alien = Instantiate(AlienPrefab);
+        var alienScript = alien.GetComponent<Alien>();
+        alienScript.Index = i;
+        alienScript.Target = Player.transform;
+        alienScript.OnDestroyEvent.AddListener(DisableAlien);
+        _availableAlienHeadPool.Push(alienScript.Head.gameObject);
+        var selfDestructScript = alienScript.Head.GetComponent<SelfDestruct>();
+        selfDestructScript.OnDestroyAlienHeadEvent.AddListener(OnDestroyAlienHead);
+        alien.transform.parent = AlienContainer.transform;
+        return alien;
     }
 
     /// <summary>
@@ -290,67 +374,35 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Return an alien game object from the pool.
-    /// </summary>
-    /// <returns>an alien game object from the pool</returns>
-    private GameObject GetAlienFromPool()
-    {
-        // Return any "free" alien in the alien pool.
-        for (int i = 0; i < AlienPoolSize; i++)
-        {
-            if (!_availableAlienPool[i].activeInHierarchy)
-            {
-                var alien = _availableAlienPool[i];
-                alien.SetActive(true);
-                return alien;
-            }
-        }
-
-        // Createa a new alien and return it after adding it to the alien pool.
-        var newAlien = CreateAlien(AlienPoolSize);
-        _availableAlienPool.Add(newAlien);
-        AlienPoolSize += 1;
-        return newAlien;
-    }
-
-    /// <summary>
-    /// Create an alien object and populate fields of the object.
-    /// </summary>
-    /// <param name="i">Index of the new alien object in the pool</param>
-    /// <returns></returns>
-    private GameObject CreateAlien(int i)
-    {
-        var alien = Instantiate(AlienPrefab);
-        var alienScript = alien.GetComponent<Alien>();
-        alienScript.Index = i;
-        alienScript.Target = Player.transform;
-        alienScript.OnDestroyEvent.AddListener(DisableAlien);
-        alien.transform.parent = AlienContainer.transform;
-        return alien;
-    }
-
-    /// <summary>
     /// Return an pickup game object from the pool.
     /// </summary>
     /// <returns>an pickup game object from the pool</returns>
     private GameObject GetPickupFromPool()
     {
-        // Return any "free" pickup in the alien pool.
-        for (int i = 0; i < PickupPoolSize; i++)
+        GameObject pickup = null;
+        lock (_pickupGlobalLock)
         {
-            if (!_availablePickupPool[i].activeInHierarchy)
+            // Return any "free" pickup in the alien pool.
+            for (int i = 0; i < PickupPoolSize; i++)
             {
-                var pickup = _availablePickupPool[i];
-                pickup.SetActive(true);
-                return pickup;
+                if (!_availablePickupPool[i].activeInHierarchy)
+                {
+                    pickup = _availablePickupPool[i];
+                    pickup.SetActive(true);
+                    break;
+                }
+            }
+
+            // Createa a new pickup and return it after adding it to the pickup pool.
+            if (pickup == null)
+            {
+                pickup = CreatePickup(PickupPoolSize);
+                _availablePickupPool.Add(pickup);
+                PickupPoolSize += 1;
             }
         }
 
-        // Createa a new pickup and return it after adding it to the pickup pool.
-        var newPickup = CreatePickup(PickupPoolSize);
-        _availablePickupPool.Add(newPickup);
-        PickupPoolSize += 1;
-        return newPickup;
+        return pickup;
     }
 
     /// <summary>
@@ -366,5 +418,50 @@ public class GameManager : MonoBehaviour
         pickup.transform.parent = PickupContainer.transform;
         upgradeScript.Gun = Gun;
         return pickup;
+    }
+
+    private void OnDestroyAlienHead(GameObject alienHead)
+    {
+        _availableAlienHeadPool.Push(alienHead.gameObject);
+    }
+
+    /// <summary>
+    /// Return a new alien head game object from the pool.
+    /// </summary>
+    /// <returns>A new alien head game object from the pool</returns>
+    private GameObject GetAlienHeadFromPool(GameObject alien)
+    {
+        GameObject alienHead;
+        lock (_alienHeadGlobalLock)
+        {
+            if (_availableAlienHeadPool.Count == 0)
+            {
+                alienHead = Instantiate(AlienHeadPrefab);
+            }
+            else
+            {
+                alienHead = _availableAlienHeadPool.Pop();
+                var alienScript = alien.GetComponent<Alien>();
+                ToogleAlienHeadDetachment(alienScript, true);
+                alienScript.Head.gameObject.SetActive(true);
+            }
+        }
+
+        return alienHead;
+    }
+
+    private void ToogleAlienHeadDetachment(Alien alienScript, bool isAlive)
+    {
+        alienScript.IsAlive = isAlive;
+        alienScript.Head.GetComponent<Animator>().enabled = isAlive;
+        alienScript.Head.isKinematic = isAlive;
+        alienScript.Head.useGravity = !isAlive;
+        alienScript.Head.GetComponent<SphereCollider>().enabled = !isAlive;
+        if (!isAlive)
+        {
+            alienScript.Head.velocity = new Vector3(0, 26.0f, 3.0f);
+            alienScript.Head.transform.parent = AlienHeadContainer.transform;
+            alienScript.Head.gameObject.SetActive(true);
+        }
     }
 }

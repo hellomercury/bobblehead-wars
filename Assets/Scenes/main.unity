@@ -1058,6 +1058,9 @@ MonoBehaviour:
   PickupSpawning: 1
   Gun: {fileID: 1268638993}
   UpgradeMaxTimeSpawn: 20
+  AlienHeadContainer: {fileID: 1262476590}
+  AlienHeadPrefab: {fileID: 1699910410913478, guid: b4e9d59bb839c470f8a56b8bb15b14cd,
+    type: 2}
 --- !u!1 &649946160 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100078, guid: 7f78b096b427d419f9918e4ae4fc4aec, type: 3}
@@ -1384,6 +1387,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 854142697}
   m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1262476590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1262476591}
+  m_Layer: 0
+  m_Name: AlienHeadContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1262476591
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1262476590}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1825145414}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1268638991 stripped
 GameObject:
@@ -2216,6 +2247,7 @@ Transform:
   - {fileID: 1579068931}
   - {fileID: 876284027}
   - {fileID: 57861802}
+  - {fileID: 1262476591}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

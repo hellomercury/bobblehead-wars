@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 
 [System.Serializable]
-public class OnAlienDestroyedEvent : UnityEvent<int>
+public class OnAlienDestroyedEvent : UnityEvent<int, GameObject>
 {
 }
 
@@ -18,6 +18,8 @@ public class Alien : MonoBehaviour
     /// Target to be followed by this game object.
     /// </summary>
     [HideInInspector] public Transform Target;
+
+    public bool DidLoseHead { get; private set; };
 
     /// <summary>
     /// The amount of time, in milliseconds, for when the alien should update its path.
@@ -39,6 +41,16 @@ public class Alien : MonoBehaviour
     /// </summary>
     private NavMeshAgent _agent;
 
+    /// <summary>
+    /// The alien head.
+    /// </summary>
+    public Rigidbody Head;
+
+    /// <summary>
+    /// Whether the alien is alive.
+    /// </summary>
+    public bool IsAlive = true;
+
     private void Awake()
     {
         OnDestroyEvent = new OnAlienDestroyedEvent();
@@ -51,21 +63,29 @@ public class Alien : MonoBehaviour
 
     private void Update()
     {
-        _navigationTime += Time.deltaTime;
-        if (_navigationTime > NavigationUpdate)
+        if (IsAlive)
         {
-            if (Target != null)
+            _navigationTime += Time.deltaTime;
+            if (_navigationTime > NavigationUpdate)
             {
-                _agent.destination = Target.position;
-            }
+                if (Target != null)
+                {
+                    _agent.destination = Target.position;
+                }
 
-            NavigationUpdate = 0;
+                NavigationUpdate = 0;
+            }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        OnDestroyEvent.Invoke(Index);
-        SoundManager.Instance.PlayOneShot(SoundManager.Instance.AlienDeath);
+        if (IsAlive)
+        {
+            DidLoseHead = true;
+            Head.gameObject.GetComponent<SelfDestruct>().Initiate();
+            OnDestroyEvent.Invoke(Index, gameObject);
+            SoundManager.Instance.PlayOneShot(SoundManager.Instance.AlienDeath);
+        }
     }
 }
