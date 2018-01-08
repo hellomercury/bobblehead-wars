@@ -151,36 +151,28 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    /// <summary>
-    /// Container to store all of the alien heads.
-    /// </summary>
-    public GameObject AlienHeadContainer;
+    #region AlienHeadRegion
 
     /// <summary>
-    /// Alien head.
+    /// The default position of the alien head with respect to the alien.
     /// </summary>
-    public GameObject AlienHeadPrefab;
+    private Vector3 _defaultAlienHeadPosition;
 
     /// <summary>
-    /// Actual pool of alien heads.
+    /// The default rotation of the alien head with respect to the alien.
     /// </summary>
-    private Stack<GameObject> _availableAlienHeadPool;
+    private Quaternion _defaultAlienHeadRotation;
 
-    /// <summary>
-    /// Lock used to sync alien heads.
-    /// </summary>
-    private Object _alienHeadGlobalLock;
-
-    private Transform _defaultAlienHeadTransform;
+    #endregion
 
     private void Awake()
     {
         Instance = this;
         _alienGlobalLock = new Object();
         _pickupGlobalLock = new Object();
-        _alienHeadGlobalLock = new Object();
-        _defaultAlienHeadTransform = AlienHeadPrefab.transform;
-        _availableAlienHeadPool = new Stack<GameObject>();
+        var alienHeadTransform = AlienPrefab.GetComponent<Alien>().Head.transform;
+        _defaultAlienHeadPosition = Utility.ClonePosition(alienHeadTransform.localPosition);
+        _defaultAlienHeadRotation = Utility.CloneRotation(alienHeadTransform.localRotation);
     }
 
     private void Start()
@@ -190,6 +182,7 @@ public class GameManager : MonoBehaviour
         {
             var newAlien = CreateAlien(i);
             newAlien.SetActive(false);
+            Utility.FindChildWithTag(newAlien, "AlienHead").SetActive(false);
             _availableAlienPool.Add(newAlien);
         }
 
@@ -317,14 +310,17 @@ public class GameManager : MonoBehaviour
             // Return any "free" alien in the alien pool.
             for (int i = 0; i < AlienPoolSize; i++)
             {
-                if (!_availableAlienPool[i].activeInHierarchy)
+                var currentAlien = _availableAlienPool[i];
+                var currentAlienHead = Utility.FindChildWithTag(currentAlien, "AlienHead");
+                if (!currentAlien.activeInHierarchy && !currentAlienHead.activeSelf)
                 {
-                    alien = _availableAlienPool[i];
+                    alien = currentAlien;
                     alien.SetActive(true);
-                    var alienHead = GetAlienHeadFromPool(alien);
-                    alienHead.transform.parent = alien.transform;
-                    alienHead.transform.position = _defaultAlienHeadTransform.position;
-                    alienHead.transform.rotation = _defaultAlienHeadTransform.rotation;
+                    var alienScript = alien.GetComponent<Alien>();
+                    ToogleAlienHeadDetachment(alienScript, true);
+                    currentAlienHead.SetActive(true);
+                    currentAlienHead.transform.localPosition = Utility.ClonePosition(_defaultAlienHeadPosition);
+                    currentAlienHead.transform.localRotation = Utility.CloneRotation(_defaultAlienHeadRotation);
                     break;
                 }
             }
@@ -353,9 +349,6 @@ public class GameManager : MonoBehaviour
         alienScript.Index = i;
         alienScript.Target = Player.transform;
         alienScript.OnDestroyEvent.AddListener(DisableAlien);
-        _availableAlienHeadPool.Push(alienScript.Head.gameObject);
-        var selfDestructScript = alienScript.Head.GetComponent<SelfDestruct>();
-        selfDestructScript.OnDestroyAlienHeadEvent.AddListener(OnDestroyAlienHead);
         alien.transform.parent = AlienContainer.transform;
         return alien;
     }
@@ -420,36 +413,6 @@ public class GameManager : MonoBehaviour
         return pickup;
     }
 
-    private void OnDestroyAlienHead(GameObject alienHead)
-    {
-        _availableAlienHeadPool.Push(alienHead.gameObject);
-    }
-
-    /// <summary>
-    /// Return a new alien head game object from the pool.
-    /// </summary>
-    /// <returns>A new alien head game object from the pool</returns>
-    private GameObject GetAlienHeadFromPool(GameObject alien)
-    {
-        GameObject alienHead;
-        lock (_alienHeadGlobalLock)
-        {
-            if (_availableAlienHeadPool.Count == 0)
-            {
-                alienHead = Instantiate(AlienHeadPrefab);
-            }
-            else
-            {
-                alienHead = _availableAlienHeadPool.Pop();
-                var alienScript = alien.GetComponent<Alien>();
-                ToogleAlienHeadDetachment(alienScript, true);
-                alienScript.Head.gameObject.SetActive(true);
-            }
-        }
-
-        return alienHead;
-    }
-
     private void ToogleAlienHeadDetachment(Alien alienScript, bool isAlive)
     {
         alienScript.IsAlive = isAlive;
@@ -460,7 +423,6 @@ public class GameManager : MonoBehaviour
         if (!isAlive)
         {
             alienScript.Head.velocity = new Vector3(0, 26.0f, 3.0f);
-            alienScript.Head.transform.parent = AlienHeadContainer.transform;
             alienScript.Head.gameObject.SetActive(true);
         }
     }

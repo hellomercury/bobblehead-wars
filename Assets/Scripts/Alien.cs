@@ -19,8 +19,6 @@ public class Alien : MonoBehaviour
     /// </summary>
     [HideInInspector] public Transform Target;
 
-    public bool DidLoseHead { get; private set; };
-
     /// <summary>
     /// The amount of time, in milliseconds, for when the alien should update its path.
     /// </summary>
@@ -82,7 +80,6 @@ public class Alien : MonoBehaviour
     {
         if (IsAlive)
         {
-            DidLoseHead = true;
             Head.gameObject.GetComponent<SelfDestruct>().Initiate();
             OnDestroyEvent.Invoke(Index, gameObject);
             SoundManager.Instance.PlayOneShot(SoundManager.Instance.AlienDeath);
