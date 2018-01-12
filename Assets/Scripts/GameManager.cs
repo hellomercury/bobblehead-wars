@@ -166,6 +166,16 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// The death floor to be used with the particle system.
+    /// </summary>
+    public GameObject DeathFloor;
+
+    /// <summary>
+    /// Animator component attached to the BobbleArena game object.
+    /// </summary>
+    public Animator ArenaAnimator;
+
     private void Awake()
     {
         Instance = this;
@@ -203,6 +213,11 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if (Player == null)
+        {
+            return;
+        }
+
+        if (TotalAliens == 0)
         {
             return;
         }
@@ -303,8 +318,12 @@ public class GameManager : MonoBehaviour
 
             alienScript.Head.gameObject.SetActive(true);
             var force = new Vector3(Random.Range(0f, 30f), Random.Range(0f, 30f), Random.Range(0f, 30f));
-//            alienScript.Head.AddRelativeForce(new Vector3(0, 26.0f, 3.0f), ForceMode.VelocityChange);
             alienScript.Head.AddRelativeForce(force, ForceMode.VelocityChange);
+        }
+
+        if (TotalAliens == 0)
+        {
+            Invoke("EndGame", 2.0f);
         }
     }
 
@@ -363,6 +382,7 @@ public class GameManager : MonoBehaviour
         alienScript.Index = i;
         alienScript.Target = Player.transform;
         alienScript.OnDestroyEvent.AddListener(DisableAlien);
+        alienScript.GetDeathParticles().SetDeathFloor(DeathFloor);
         alien.transform.parent = AlienContainer.transform;
         return alien;
     }
@@ -427,6 +447,12 @@ public class GameManager : MonoBehaviour
         return pickup;
     }
 
+    /// <summary>
+    /// Toogle the alien head to detach it from the body when killed or when the alien is about to be returned from the
+    /// alien pool. 
+    /// </summary>
+    /// <param name="alienScript">The alien script attached to the alien game object.</param>
+    /// <param name="isAlive">Whether detaching or reattaching is desired</param>
     private void ToogleAlienHeadDetachment(Alien alienScript, bool isAlive)
     {
         alienScript.IsAlive = isAlive;
@@ -434,5 +460,11 @@ public class GameManager : MonoBehaviour
         alienScript.Head.isKinematic = isAlive;
         alienScript.Head.useGravity = !isAlive;
         alienScript.Head.GetComponent<SphereCollider>().enabled = !isAlive;
+    }
+
+    private void EndGame()
+    {
+        SoundManager.Instance.PlayOneShot(SoundManager.Instance.ElevatorArrived);
+        ArenaAnimator.SetTrigger("PlayerWon");
     }
 }

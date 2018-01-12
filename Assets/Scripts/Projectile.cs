@@ -2,6 +2,11 @@
 
 public class Projectile : MonoBehaviour
 {
+    private void OnTriggerEnter(Collider other)
+    {
+        DeactivateProjectile();
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         DeactivateProjectile();

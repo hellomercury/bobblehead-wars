@@ -65,21 +65,27 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Whether the marine is hit.
     /// </summary>
-    private bool _isHit = false;
+    private bool _isHit;
 
     /// <summary>
     /// How long it is since the last hit.
     /// </summary>
-    private float _timeSinceHit = 0;
+    private float _timeSinceHit;
 
     /// <summary>
     /// How many times the marine has been hit.
     /// </summary>
     private int _hitNumber = -1;
 
+    /// <summary>
+    /// Death particle script attached to the marine death particle game object.
+    /// </summary>
+    private DeathParticles _deathParticles;
+
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
+        _deathParticles = gameObject.GetComponentInChildren<DeathParticles>();
     }
 
     // Update is called once per frame
@@ -172,6 +178,7 @@ public class PlayerController : MonoBehaviour
         MarineHead.transform.parent = null;
         MarineHead.useGravity = true;
         SoundManager.Instance.PlayOneShot(SoundManager.Instance.MarineDeath);
+        _deathParticles.Activate();
         Destroy(gameObject);
     }
 }

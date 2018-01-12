@@ -54,6 +54,11 @@ public class Alien : MonoBehaviour
     /// </summary>
     public bool IsAlive = true;
 
+    /// <summary>
+    /// The death particle of the alien when killed.
+    /// </summary>
+    private DeathParticles _deathParticles;
+
     private void Awake()
     {
         OnDestroyEvent = new OnAlienDestroyedEvent();
@@ -88,6 +93,24 @@ public class Alien : MonoBehaviour
             OnDestroyEvent.Invoke(Index, gameObject);
             Head.gameObject.GetComponent<SelfDestruct>().Initiate();
             SoundManager.Instance.PlayOneShot(SoundManager.Instance.AlienDeath);
+            if (_deathParticles)
+            {
+                _deathParticles.Activate();
+            }
         }
+    }
+
+    /// <summary>
+    /// Return the DeathParticles script attached to the children.
+    /// </summary>
+    /// <returns></returns>
+    public DeathParticles GetDeathParticles()
+    {
+        if (_deathParticles == null)
+        {
+            _deathParticles = GetComponentInChildren<DeathParticles>();
+        }
+
+        return _deathParticles;
     }
 }
