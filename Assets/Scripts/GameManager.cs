@@ -300,6 +300,11 @@ public class GameManager : MonoBehaviour
             alienGameObject.GetComponent<SphereCollider>().enabled = false;
             alienGameObject.GetComponent<NavMeshAgent>().enabled = false;
             ToogleAlienHeadDetachment(alienScript, false);
+
+            alienScript.Head.gameObject.SetActive(true);
+            var force = new Vector3(Random.Range(0f, 30f), Random.Range(0f, 30f), Random.Range(0f, 30f));
+//            alienScript.Head.AddRelativeForce(new Vector3(0, 26.0f, 3.0f), ForceMode.VelocityChange);
+            alienScript.Head.AddRelativeForce(force, ForceMode.VelocityChange);
         }
     }
 
@@ -429,10 +434,5 @@ public class GameManager : MonoBehaviour
         alienScript.Head.isKinematic = isAlive;
         alienScript.Head.useGravity = !isAlive;
         alienScript.Head.GetComponent<SphereCollider>().enabled = !isAlive;
-        if (!isAlive)
-        {
-            alienScript.Head.gameObject.SetActive(true);
-            alienScript.Head.velocity = new Vector3(0, 26.0f, 3.0f);
-        }
     }
 }

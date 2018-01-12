@@ -85,8 +85,8 @@ public class Alien : MonoBehaviour
     {
         if (IsAlive)
         {
-            Head.gameObject.GetComponent<SelfDestruct>().Initiate();
             OnDestroyEvent.Invoke(Index, gameObject);
+            Head.gameObject.GetComponent<SelfDestruct>().Initiate();
             SoundManager.Instance.PlayOneShot(SoundManager.Instance.AlienDeath);
         }
     }
