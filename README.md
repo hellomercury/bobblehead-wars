@@ -2,7 +2,7 @@
 
 ## Introduction
 
-![alt text](http://url/to/img.png)
+![alt text](https://raw.githubusercontent.com/rumeungrimu/bobblehead-wars/master/screenshots/screenshot.png)
 
 Bobblehead Wars is a fun third-person shooter game against swarm of aliens.
 
